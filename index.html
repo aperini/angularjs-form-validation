@@ -15,7 +15,7 @@
             margin-right: auto;
             margin-left: auto;
             text-align: center;
-            width: 400px;
+            width: 450px;
         }
         .table {
             margin-top: 20px;
@@ -33,9 +33,10 @@
 
     <!--importa angular-->
     <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular/angular-messages.js"></script>
 
     <script>
-        angular.module("listaTelefonica", []);
+        angular.module("listaTelefonica", ["ngMessages"]);
         angular.module("listaTelefonica").controller("listaTelefonicaCtrl", function($scope) {
 
             //definindo atributos do escopo desta controller
@@ -117,26 +118,31 @@
                 <option value="">Seleciona uma operadora</option>
             </select>
         </form>
-        
-        <!-- Mensagens de validação -->
-        <div    class="alert alert-danger"
-                ng-show="contatoForm.nome.$error.required && contatoForm.nome.$dirty">
-            Por favor, preencha o campo nome.
-        </div>
-        <div    class="alert alert-danger"
-                ng-show="contatoForm.nome.$error.minlength">
-                <!-- aqui não precisou usar dirty pq o minlength só é ativado qdo há pelo menos 1 char.. aí já é dirty -->
-            O campo nome deve ter no mínimo 10 caracteres.
-        </div>
-        <div    class="alert alert-danger"
-                ng-show="contatoForm.telefone.$required  && contatoForm.telefone.$dirty">
-            Por favor, preencha o campo telefone.
-        </div>
-        <div    class="alert alert-danger"
-                ng-show="contatoForm.telefone.$error.pattern">
-            O telefone deve ter o formato de DDDDD-DDDD.
-        </div>
 
+        <!-- Mensagens de validação para o campo nome -->
+        <div    ng-messages="contatoForm.nome.$error"
+                ng-show='contatoForm.nome.$dirty'>
+            
+            <div class="alert alert-danger" ng-message="required">
+                Por favor, preencha o campo nome.
+            </div>
+            <div class="alert alert-danger" ng-message="minlength">
+                O nome deve ter no mínimo 10 caracteres.
+            </div>
+        </div>
+        <!-- Mensagens de validação para o campo telefone -->
+        <div    ng-messages="contatoForm.telefone.$error"
+                ng-show='contatoForm.telefone.$dirty'>
+
+            <div class="alert alert-danger" ng-message="required">
+                Por favor, preencha o campo telefone.
+            </div>
+            <div class="alert alert-danger" ng-message="pattern">
+                O telefone deve ter o formato de DDDDD-DDDD.
+            </div>
+        </div>
+        
+ 
         <!-- botão com bind de enabled e action de click -->
         <button class="btn btn-primary btn-block"
                 ng-click="adicionarContato(contato)" ng-disabled="contatoForm.$invalid">
